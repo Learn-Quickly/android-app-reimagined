@@ -12,7 +12,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Header;
 
-interface IApiEndpoints {
+public interface IApiEndpoints {
     @FormUrlEncoded
     @POST("account/api/user/create")
     Call<Token> createUser(@Field("username") String username, @Field("email") String email,
@@ -22,9 +22,9 @@ interface IApiEndpoints {
     Call<Token> loginUser(@Field("username") String username, @Field("password") String password);
 
     @GET("account/api/user/me")
-    Call<UserProfile> getUserInfo(@Header("Authorization") String token);
+    Call<UserProfile> getUserInfo();
 
     @POST("account/api/user/me")
-    Call<Token> changeUserInfo(@Header("Authorization") String token, @Body JsonObject userProfile);
+    Call<Token> changeUserInfo(@Body JsonObject userProfile);
 
 }

@@ -1,6 +1,7 @@
 package com.pinkertone.apiwrapper;
 
-import com.sun.org.apache.xml.internal.security.signature.ReferenceNotInitializedException;
+
+import org.junit.runners.model.InitializationError;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -12,7 +13,7 @@ import java.rmi.NotBoundException;
 public class ApiService {  // Singleton for making requests to API
     private static ApiService instance;
     private String baseUrl;
-    private String authToken;
+    private String authToken = "";
     private String language;
 
     public IApiEndpoints apiService;
@@ -24,7 +25,7 @@ public class ApiService {  // Singleton for making requests to API
         initApiService();
     }
 
-    public ApiService(String baseUrl, String language){
+    public ApiService(String baseUrl, String language) {
         this.baseUrl = baseUrl;
         this.language = language;
         initApiService();
@@ -43,8 +44,7 @@ public class ApiService {  // Singleton for making requests to API
     }
 
     private void initApiService(){
-        OkHttpClient httpClient = new OkHttpClient();
-        httpClient.interceptors().add(new HeadersInterceptor(authToken, language));
+        OkHttpClient httpClient = new OkHttpClient.Builder().addInterceptor(new HeadersInterceptor(authToken, language)).build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
@@ -74,9 +74,9 @@ public class ApiService {  // Singleton for making requests to API
         return instance;
     }
 
-    public static synchronized ApiService getInstance() throws ReferenceNotInitializedException {
+    public static synchronized ApiService getInstance() throws InitializationError {
         if (instance == null) {
-            throw new ReferenceNotInitializedException("ApiService was not initialized before");
+            throw new InitializationError("ApiService was not initialized before");
         }
         return instance;
     }

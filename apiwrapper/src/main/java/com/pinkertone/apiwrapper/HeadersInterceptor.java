@@ -5,6 +5,7 @@ import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.Request.Builder;
 
 class HeadersInterceptor implements Interceptor {
     private String authToken;
@@ -23,12 +24,20 @@ class HeadersInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
 
-        Request request = original.newBuilder()
-                .header("Accept", "application/json")
-                .header("Authorization", authToken)
-                .header("Accept-Language", language)
-                .method(original.method(), original.body())
-                .build();
+        Builder builder = original.newBuilder();
+        if (!authToken.isEmpty()) {
+            builder
+                    .header("Accept", "application/json")
+                    .header("Authorization", "Token " + authToken)
+                    .header("Accept-Language", language)
+                    .method(original.method(), original.body());
+        } else {
+            builder
+                    .header("Accept", "application/json")
+                    .header("Accept-Language", language)
+                    .method(original.method(), original.body());
+        }
+        Request request = builder.build();
 
         Response response = chain.proceed(request);
 
