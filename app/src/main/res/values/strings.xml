@@ -1,3 +1,19 @@
 <resources>
+    <!--region App-->
     <string name="app_name">LQRL</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <!--endregion-->
+    <!--region Actions-->
+    <string name="action_login">Login</string>
+    <string name="action_signup">Sign Up</string>
+    <!--endregion-->
+    <!--region Hints-->
+    <string name="hint_nickname">clever_unique_nickname</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Strong password…</string>
+    <string name="hint_password_confirm">Confirm your strong password…</string>
+    <!--endregion-->
 </resources>
