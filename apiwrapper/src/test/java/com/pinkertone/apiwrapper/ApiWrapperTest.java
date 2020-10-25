@@ -1,10 +1,11 @@
-package com.pinkertone.lqrl;
+package com.pinkertone.apiwrapper;
 
-import com.pinkertone.apiwrapper.ApiWrapper;
-import com.pinkertone.apiwrapper.ICallback;
 import com.pinkertone.apiwrapper.types.Token;
 import com.pinkertone.apiwrapper.types.UserProfile;
 
+import static com.pinkertone.apiwrapper.Constants.BASE_URL;
+import static com.pinkertone.apiwrapper.Constants.TEST_PASSWORD;
+import static com.pinkertone.apiwrapper.Constants.TEST_USERNAME;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -46,30 +47,28 @@ class UserProfileCallback implements ICallback<UserProfile> {
 }
 
 
+@SuppressWarnings("BusyWait")
 public class ApiWrapperTest {
-    private final String BASE_URL = "http://lqrl.tk/";
-    private ApiWrapper wrapper;
+    private final ApiWrapper wrapper;
 
     public ApiWrapperTest() {
-        wrapper = new ApiWrapper(BASE_URL, "uk");
+        wrapper = ApiWrapper.getInstance(BASE_URL, "uk");
     }
 
     private void loginWrapper() throws InterruptedException {
-        TokenCallback callback = new TokenCallback();
-        wrapper.loginUser(callback, "let45fc", "let45fclet45fc");
-        while (!callback.isReady()) {
-            Thread.sleep(5);
+        if (!wrapper.isAuthorized()) {
+            TokenCallback callback = new TokenCallback();
+            assertFalse(wrapper.isAuthorized());
+            wrapper.loginUser(callback, TEST_USERNAME, TEST_PASSWORD);
+            while (!callback.isReady()) {
+                Thread.sleep(5);
+            }
         }
     }
 
     @Test
     public void loginUser() throws InterruptedException {
-        assertFalse(wrapper.isAuthorized());
-        TokenCallback callback = new TokenCallback();
-        wrapper.loginUser(callback, "let45fc", "let45fclet45fc");
-        while (!callback.isReady()) {
-            Thread.sleep(5);
-        }
+        loginWrapper();
         assertTrue(wrapper.isAuthorized());
     }
 
@@ -79,7 +78,6 @@ public class ApiWrapperTest {
 
     @Test
     public void getUserInfo() throws InterruptedException {
-
         loginWrapper();
 
         UserProfileCallback callback = new UserProfileCallback();

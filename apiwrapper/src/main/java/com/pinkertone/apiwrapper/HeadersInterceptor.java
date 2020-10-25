@@ -1,26 +1,30 @@
 package com.pinkertone.apiwrapper;
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.Request.Builder;
+import okhttp3.Response;
 
 class HeadersInterceptor implements Interceptor {
-    private String authToken;
+    private final String authToken;
     private String language = "en";
 
-    public HeadersInterceptor(String authToken, String language){
+    public HeadersInterceptor(String authToken, String language) {
         this.authToken = authToken;
         this.language = language;
     }
 
-    public HeadersInterceptor(String authToken){
+    public HeadersInterceptor(String authToken) {
         this.authToken = authToken;
     }
 
+    @SuppressWarnings("UnnecessaryLocalVariable")
     @Override
+    @NonNull
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
 

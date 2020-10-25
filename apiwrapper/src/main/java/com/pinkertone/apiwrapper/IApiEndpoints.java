@@ -26,5 +26,4 @@ public interface IApiEndpoints {
 
     @POST("account/api/user/me")
     Call<Token> changeUserInfo(@Body JsonObject userProfile);
-
 }
