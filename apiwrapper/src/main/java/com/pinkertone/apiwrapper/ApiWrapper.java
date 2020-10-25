@@ -85,6 +85,7 @@ public class ApiWrapper {
             @Override
             public void onFailure(Call<UserProfile> call, Throwable t) {
                 t.printStackTrace();
+                callback.onFail(t);
             }
         });
 
