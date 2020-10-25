@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName;
 
 
 public class UserProfile {
-    @SerializedName("user")
+    @SerializedName("user_data")
     @Expose
     public User user;
 
-    @SerializedName("profile")
+    @SerializedName("profile_data")
     @Expose
     public Profile profile;
 }

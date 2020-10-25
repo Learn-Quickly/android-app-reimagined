@@ -60,6 +60,10 @@ public class ApiService {  // Singleton for making requests to API
         initApiService();
     }
 
+    public String getAuthToken() {
+        return authToken;
+    }
+
     public static synchronized ApiService getInstance(String baseUrl, String authToken, String language) {
         if (instance == null) {
             instance = new ApiService(baseUrl, authToken, language);
