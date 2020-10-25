@@ -1,17 +1,24 @@
 package com.pinkertone.apiwrapper;
 
 import com.pinkertone.apiwrapper.types.Token;
+import com.pinkertone.apiwrapper.types.User;
 import com.pinkertone.apiwrapper.types.UserProfile;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class ApiWrapper {
     private ApiService apiServiceSingleton;
     private String authToken = "";
     private String baseUrl;
     private String language;
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+        apiServiceSingleton.setAuthToken(authToken);
+    }
 
     public ApiWrapper(String baseUrl, String authToken, String language){
         this.baseUrl = baseUrl;
@@ -26,60 +33,53 @@ public class ApiWrapper {
         this.apiServiceSingleton = ApiService.getInstance(baseUrl, language);
     }
 
-    public Token loginUser(String username, String password) {
+    public void loginUser(final ICallback<Token> callback, String username, String password) {
         Call<Token> loginCall = apiServiceSingleton.apiService
                 .loginUser(username, password);
 
-        final Token[] token = new Token[1];
         loginCall.enqueue(new Callback<Token>() {
             @Override
             public void onResponse(Call<Token> call, Response<Token> response) {
-                token[0] = response.body();
+                callback.onSuccess(response.body());
+                authToken = response.body().token;
+                apiServiceSingleton.setAuthToken(authToken);
             }
 
             @Override
             public void onFailure(Call<Token> call, Throwable t) {
                 t.printStackTrace();
+                callback.onFail(t);
             }
         });
-        authToken = token[0].token;
-        apiServiceSingleton.setAuthToken(authToken);
-
-        return token[0];
     }
 
-    public Token createUser(String username, String email, String password) {
+    public void createUser(final ICallback<Token> callback, String username, String email, String password) {
         Call<Token> createCall = apiServiceSingleton.apiService
                 .createUser(username, email, password);
 
-        final Token[] token = new Token[1];
         createCall.enqueue(new Callback<Token>() {
             @Override
             public void onResponse(Call<Token> call, Response<Token> response) {
-                token[0] = response.body();
+                callback.onSuccess(response.body());
+                authToken = response.body().token;
+                apiServiceSingleton.setAuthToken(authToken);
             }
 
             @Override
             public void onFailure(Call<Token> call, Throwable t) {
                 t.printStackTrace();
+                callback.onFail(t);
             }
         });
-
-        authToken = token[0].token;
-        apiServiceSingleton.setAuthToken(authToken);
-
-        return token[0];
     }
 
-    public UserProfile getUserInfo() {
-        Call<UserProfile> userInfoCall = apiServiceSingleton.apiService
+    public void getUserInfo(final ICallback<UserProfile> callback) {
+        final Call<UserProfile> userInfoCall = apiServiceSingleton.apiService
                 .getUserInfo();
-
-        final UserProfile[] userProfiles = new UserProfile[1];
         userInfoCall.enqueue(new Callback<UserProfile>() {
             @Override
             public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
-                userProfiles[0] = response.body();
+                callback.onSuccess(response.body());
             }
 
             @Override
@@ -88,11 +88,9 @@ public class ApiWrapper {
             }
         });
 
-        return userProfiles[0];
-
     }
 
     public boolean isAuthorized() {
-        return !authToken.isEmpty();
+        return !authToken.isEmpty() & !apiServiceSingleton.getAuthToken().isEmpty();
     }
 }
