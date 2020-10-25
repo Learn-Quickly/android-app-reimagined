@@ -1,18 +1,18 @@
-package com.pinkertone.test.java;
+package com.pinkertone.lqrl;
 
 import com.pinkertone.apiwrapper.ApiService;
 import com.pinkertone.apiwrapper.types.Token;
 import com.pinkertone.apiwrapper.types.UserProfile;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 public class ApiServiceTest {
