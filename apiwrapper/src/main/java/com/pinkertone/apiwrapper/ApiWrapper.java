@@ -5,8 +5,6 @@ import androidx.annotation.NonNull;
 import com.pinkertone.apiwrapper.types.Token;
 import com.pinkertone.apiwrapper.types.UserProfile;
 
-import org.junit.runners.model.InitializationError;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -105,9 +103,9 @@ public class ApiWrapper {
         return instance;
     }
 
-    public static synchronized ApiWrapper getInstance() throws InitializationError {
+    public static synchronized ApiWrapper getInstance() throws RuntimeException {
         if (instance == null) {
-            throw new InitializationError("ApiService was not initialized before");
+            throw new RuntimeException("ApiService was not initialized before");
         }
         return instance;
     }
