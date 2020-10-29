@@ -2,13 +2,20 @@ package com.pinkerton.lqrl.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.pinkerton.lqrl.databinding.ActivityLoginBinding
+import com.pinkerton.lqrl.util.ApiUtils
+import com.pinkerton.lqrl.util.SharedPreferencesManager
+import com.pinkertone.apiwrapper.Resource
+import com.pinkertone.apiwrapper.Status
+import com.pinkertone.apiwrapper.types.Token
 import kotlinx.android.synthetic.main.activity_login.view.*
+import kotlinx.coroutines.runBlocking
 
 class LoginActivity : AppCompatActivity() {
     // region Binding
@@ -25,7 +32,9 @@ class LoginActivity : AppCompatActivity() {
     // region Data
     private var nickname: String = ""
     private var password: String = ""
+
     // endregion
+    private val apiUtils = ApiUtils()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,12 +58,12 @@ class LoginActivity : AppCompatActivity() {
         }
 
         loginButton.setOnClickListener {
-            if (validateCredentials()) {
+            if (validateSaveCredentials()) {
                 startMainActivity()
             }
         }
 
-        signupTextButton. setOnClickListener {
+        signupTextButton.setOnClickListener {
             startSignUpActivity()
         }
     }
@@ -66,10 +75,32 @@ class LoginActivity : AppCompatActivity() {
         this.finish()
     }
 
-    private fun validateCredentials(): Boolean {
-        // TODO: implement API checks
+    private fun validateSaveCredentials(): Boolean {
+        clearErrors()
+        // TODO: progress bar
+        var value: Boolean = false
 
-        return true
+        runBlocking {
+            val response: Resource<Token> = apiUtils.loginUser(nickname, password)
+            if (response.status == Status.SUCCESS) {
+                val token = response.data?.string ?: "null"
+                SharedPreferencesManager.CREDENTIALS.putToken(token)
+
+                value = true
+            } else if (response.status == Status.ERROR) {
+                // TODO: error codes
+                Log.d("API", response.message ?: "No error message was provided!")
+                nicknameInput.error = "Wrong Credentials!"
+                nicknameInput.requestFocus()
+            }
+        }
+
+        return value
+    }
+
+    private fun clearErrors() {
+        nicknameInput.error = null
+        passwordInput.error = null
     }
 
     private fun startSignUpActivity() {

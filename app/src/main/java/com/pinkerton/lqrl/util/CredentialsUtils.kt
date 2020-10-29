@@ -5,15 +5,15 @@ class CredentialsUtils {
         // TODO: implement checks
 
         fun isValidEmail(email: String): Boolean {
-            return true
+            return email.isNotEmpty()
         }
 
         fun isValidPassword(password: String): Boolean {
-            return true
+            return password.isNotEmpty()
         }
 
         fun isValidNickname(nickname: String): Boolean {
-            return true
+            return nickname.isNotEmpty()
         }
     }
 }

@@ -23,6 +23,10 @@ abstract class SharedPreferencesManager(
         }
     }
 
+    fun clear() {
+        return prefs.edit().clear().apply()
+    }
+
     //region Wrapper
     //region Gets
     fun getBooleanOr(key: String, default: Boolean): Boolean? {

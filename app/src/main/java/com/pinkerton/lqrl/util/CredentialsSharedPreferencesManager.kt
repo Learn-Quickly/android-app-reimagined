@@ -11,7 +11,7 @@ class CredentialsSharedPreferencesManager(
         // endregion
     }
 
-    fun getTokenOr(default: String): String? {
+    fun getTokenOr(default: String = ""): String? {
         return super.getStringOr(KEY_TOKEN, default)
     }
 
